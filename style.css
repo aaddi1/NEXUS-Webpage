@@ -99,15 +99,28 @@ input {
 }
 
 .site-header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 1000;
   border-bottom: 1px solid rgba(31, 255, 235, 0.12);
-  background: rgba(0, 15, 15, 0.35);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background: rgba(0, 15, 15, 0.40);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  transform: translateY(0);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+.site-header.nav-hidden {
+  transform: translateY(-100%);
+}
+
+.site-header.nav-scrolled {
+  background: rgba(0, 14, 15, 0.75);
+  border-bottom-color: rgba(0, 245, 228, 0.22);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
 }
 
 .nav {
@@ -1742,8 +1755,8 @@ h2 span,
 
   .author {
     grid-template-columns: 1fr;
-    gap: 20px;
-    text-align: left;
+    gap: 18px;
+    text-align: center;
     padding: 24px 18px;
   }
 
@@ -1755,17 +1768,18 @@ h2 span,
 
   .author-copy h2 {
     font-size: 22px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   .author-copy h3 {
-    font-size: 17px;
+    font-size: 16px;
     margin-bottom: 6px;
   }
 
   .author-contacts {
     gap: 8px;
     margin-top: 14px;
+    justify-content: center;
   }
 
   .contact-pill {
@@ -1774,16 +1788,17 @@ h2 span,
   }
 
   .signature {
-    justify-self: start;
+    justify-self: center;
     font-size: 22px;
-    margin-top: 4px;
+    margin-top: 6px;
   }
 
   .cta {
-    margin-top: 72px;
+    margin-top: 80px;
     padding: 24px 18px;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     gap: 18px;
   }
 

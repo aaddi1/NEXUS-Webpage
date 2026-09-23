@@ -159,10 +159,44 @@
     cachedMaxScroll = Math.max(1, docH - window.innerHeight);
   }
 
-  // High-performance scroll tracker
+  // Auto-hide navigation tracking
+  let lastScrollY = 0;
+  const DELTA_THRESHOLD = 6;
+
+  // High-performance scroll tracker with smart auto-hide
   function onScroll() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop || window.scrollY || 0;
     targetProgress = Math.max(0, Math.min(1, scrollTop / cachedMaxScroll));
+
+    if (!siteHeader) return;
+
+    // At top of page
+    if (scrollTop <= 15) {
+      siteHeader.classList.remove('nav-hidden');
+      siteHeader.classList.remove('nav-scrolled');
+      lastScrollY = scrollTop;
+      return;
+    }
+
+    siteHeader.classList.add('nav-scrolled');
+
+    // Do not auto-hide if mobile dropdown menu is open
+    if (siteHeader.classList.contains('mobile-open')) {
+      lastScrollY = scrollTop;
+      return;
+    }
+
+    const delta = scrollTop - lastScrollY;
+    if (Math.abs(delta) > DELTA_THRESHOLD) {
+      if (delta > 0 && scrollTop > 70) {
+        // Scrolling DOWN -> Hide navbar smoothly
+        siteHeader.classList.add('nav-hidden');
+      } else if (delta < 0) {
+        // Scrolling UP -> Reveal navbar
+        siteHeader.classList.remove('nav-hidden');
+      }
+      lastScrollY = scrollTop;
+    }
   }
 
   // Smooth lerping animation loop
