@@ -22,10 +22,10 @@
   let currentProgress = 0;
   let currentFrameIndex = 0;
   let lastRenderedIndex = -1;
-  let cachedMaxScroll = 1;
 
-  // Universally compatible image loader with background decoding
+  // Universally compatible image loader
   function loadFrame(i) {
+    if (i < 0 || i >= TOTAL_FRAMES) return Promise.resolve(null);
     if (frames[i]) return Promise.resolve(frames[i]);
 
     return new Promise((resolve) => {
@@ -35,11 +35,7 @@
         if (i === currentFrameIndex || lastRenderedIndex === -1) {
           render(true);
         }
-        if (img.decode) {
-          img.decode().catch(() => {}).finally(() => resolve(img));
-        } else {
-          resolve(img);
-        }
+        resolve(img);
       };
       img.onerror = () => {
         resolve(null);
@@ -48,39 +44,12 @@
     });
   }
 
-  // Smooth progressive preloading in idle chunks
+  // Preload all frames eagerly
   function preloadFrames() {
     loadFrame(0).then(() => render(true));
 
-    // Priority 1: First 30 frames
-    for (let i = 1; i < Math.min(30, TOTAL_FRAMES); i++) {
+    for (let i = 1; i < TOTAL_FRAMES; i++) {
       loadFrame(i);
-    }
-
-    // Priority 2: Stagger remaining frames in background idle batches
-    let nextIndex = 30;
-    const BATCH_SIZE = 12;
-
-    function queueBatch() {
-      if (nextIndex >= TOTAL_FRAMES) return;
-      const end = Math.min(TOTAL_FRAMES, nextIndex + BATCH_SIZE);
-      for (let i = nextIndex; i < end; i++) {
-        loadFrame(i);
-      }
-      nextIndex = end;
-      if (nextIndex < TOTAL_FRAMES) {
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(queueBatch, { timeout: 100 });
-        } else {
-          setTimeout(queueBatch, 20);
-        }
-      }
-    }
-
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(queueBatch, { timeout: 120 });
-    } else {
-      setTimeout(queueBatch, 30);
     }
   }
 
@@ -101,7 +70,7 @@
       }
       offset++;
     }
-    return null;
+    return frames[0] || null;
   }
 
   // Draw frame to cover canvas viewport with GPU acceleration
@@ -142,30 +111,34 @@
     canvas.style.width = `${w}px`;
     canvas.style.height = `${h}px`;
 
-    recalculateScrollMetrics();
-    onScroll();
+    updateScroll();
     render(true);
   }
 
-  // Cache document scroll bounds without layout thrashing
-  function recalculateScrollMetrics() {
-    const docH = Math.max(
+  // Calculate current scroll progress
+  function updateScroll() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || window.scrollY || 0;
+    const maxScroll = Math.max(
       document.body.scrollHeight,
       document.documentElement.scrollHeight,
       document.body.offsetHeight,
       document.documentElement.offsetHeight
-    );
-    cachedMaxScroll = Math.max(1, docH - window.innerHeight);
+    ) - window.innerHeight;
+
+    if (maxScroll > 0) {
+      targetProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
+    } else {
+      targetProgress = 0;
+    }
   }
 
   // Auto-hide navigation tracking
   let lastScrollY = 0;
   const DELTA_THRESHOLD = 6;
 
-  // High-performance scroll tracker with smart auto-hide
   function onScroll() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop || window.scrollY || 0;
-    targetProgress = Math.max(0, Math.min(1, scrollTop / cachedMaxScroll));
+    updateScroll();
 
     if (!siteHeader) return;
 
@@ -188,7 +161,7 @@
     const delta = scrollTop - lastScrollY;
     if (Math.abs(delta) > DELTA_THRESHOLD) {
       if (delta > 0) {
-        // Scrolling DOWN -> Immediately pop up / show navbar
+        // Scrolling DOWN -> Immediately pop up navbar
         siteHeader.classList.remove('nav-hidden');
       } else if (delta < 0 && scrollTop > 30) {
         // Scrolling UP -> Auto hide navbar
@@ -203,26 +176,26 @@
     const diff = targetProgress - currentProgress;
     if (Math.abs(diff) > 0.0001) {
       currentProgress += diff * LERP;
-      const nextIndex = Math.round(currentProgress * (TOTAL_FRAMES - 1));
-      if (nextIndex !== currentFrameIndex || lastRenderedIndex === -1) {
-        currentFrameIndex = nextIndex;
-        render();
-      }
-    } else if (currentProgress !== targetProgress) {
+    } else {
       currentProgress = targetProgress;
-      currentFrameIndex = Math.round(currentProgress * (TOTAL_FRAMES - 1));
+    }
+
+    const nextIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(currentProgress * (TOTAL_FRAMES - 1))));
+    if (nextIndex !== currentFrameIndex || lastRenderedIndex === -1) {
+      currentFrameIndex = nextIndex;
       render();
     }
 
     requestAnimationFrame(loop);
   }
 
-  // Event listeners with passive options for maximum scroll FPS
+  // Event listeners
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('touchmove', onScroll, { passive: true });
   window.addEventListener('resize', resize, { passive: true });
   window.addEventListener('orientationchange', () => {
     setTimeout(resize, 100);
+    setTimeout(onScroll, 150);
   });
   window.addEventListener('load', () => {
     resize();

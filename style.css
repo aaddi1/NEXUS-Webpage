@@ -39,11 +39,11 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(1, 8, 8, 0.42) 0%, rgba(2, 13, 13, 0.08) 36%, rgba(2, 13, 13, 0.04) 68%, rgba(2, 8, 8, 0.38) 100%),
-    linear-gradient(180deg, rgba(1, 7, 7, 0) 0%, rgba(1, 7, 7, 0.10) 42%, rgba(1, 7, 7, 0.45) 100%);
+    linear-gradient(90deg, rgba(1, 8, 8, 0.35) 0%, rgba(2, 13, 13, 0.04) 36%, rgba(2, 13, 13, 0.02) 68%, rgba(2, 8, 8, 0.30) 100%),
+    linear-gradient(180deg, rgba(1, 7, 7, 0) 0%, rgba(1, 7, 7, 0.08) 42%, rgba(1, 7, 7, 0.35) 100%);
 }
 
 a {
@@ -62,7 +62,7 @@ input {
   width: 100vw;
   height: 100vh;
   display: block;
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
   filter: saturate(1.14) contrast(1.06) brightness(1.02);
   transform: translate3d(0, 0, 0);
@@ -73,7 +73,7 @@ input {
 .background-grade {
   position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
   background:
     radial-gradient(circle at 22% 18%, rgba(47, 255, 209, 0.06), transparent 34%),
@@ -90,7 +90,7 @@ input {
 .page-layer,
 .site-footer {
   position: relative;
-  z-index: 3;
+  z-index: 5;
 }
 
 .page-layer {
