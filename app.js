@@ -143,7 +143,7 @@
     if (!siteHeader) return;
 
     // At top of page
-    if (scrollTop <= 15) {
+    if (scrollTop <= 20) {
       siteHeader.classList.remove('nav-hidden');
       siteHeader.classList.remove('nav-scrolled');
       lastScrollY = scrollTop;
@@ -160,12 +160,12 @@
 
     const delta = scrollTop - lastScrollY;
     if (Math.abs(delta) > DELTA_THRESHOLD) {
-      if (delta > 0) {
-        // Scrolling DOWN -> Immediately pop up navbar
-        siteHeader.classList.remove('nav-hidden');
-      } else if (delta < 0 && scrollTop > 30) {
-        // Scrolling UP -> Auto hide navbar
+      if (delta > 0 && scrollTop > 60) {
+        // Scrolling DOWN -> Auto hide navbar
         siteHeader.classList.add('nav-hidden');
+      } else if (delta < 0) {
+        // Scrolling UP -> Immediately pop up navbar
+        siteHeader.classList.remove('nav-hidden');
       }
       lastScrollY = scrollTop;
     }
