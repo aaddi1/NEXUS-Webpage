@@ -188,12 +188,12 @@
 
     const delta = scrollTop - lastScrollY;
     if (Math.abs(delta) > DELTA_THRESHOLD) {
-      if (delta > 0 && scrollTop > 70) {
-        // Scrolling DOWN -> Hide navbar smoothly
-        siteHeader.classList.add('nav-hidden');
-      } else if (delta < 0) {
-        // Scrolling UP -> Reveal navbar
+      if (delta > 0) {
+        // Scrolling DOWN -> Immediately pop up / show navbar
         siteHeader.classList.remove('nav-hidden');
+      } else if (delta < 0 && scrollTop > 30) {
+        // Scrolling UP -> Auto hide navbar
+        siteHeader.classList.add('nav-hidden');
       }
       lastScrollY = scrollTop;
     }
