@@ -5,9 +5,17 @@
   const FRAME_PATH = (i) => `frames/frame_${String(i).padStart(6, '0')}.webp`;
   const LERP = 0.12;
 
+  // DOM Elements
   const canvas = document.getElementById('canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
+
+  const siteHeader = document.getElementById('siteHeader');
+  const navDotsBtn = document.getElementById('navDotsBtn');
+  const mobileNavMenu = document.getElementById('mobileNavMenu');
+  const floatingWrapper = document.getElementById('floatingContactWrapper');
+  const floatingBtn = document.getElementById('floatingContactBtn');
+  const floatingMenu = document.getElementById('floatingContactMenu');
 
   const frames = new Array(TOTAL_FRAMES).fill(null);
   let targetProgress = 0;
@@ -15,7 +23,6 @@
   let currentFrameIndex = 0;
   let lastRenderedIndex = -1;
   let cachedMaxScroll = 1;
-  let isTicking = false;
 
   // Universally compatible image loader with background decoding
   function loadFrame(i) {
@@ -24,21 +31,13 @@
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
+        frames[i] = img;
+        if (i === currentFrameIndex || lastRenderedIndex === -1) {
+          render(true);
+        }
         if (img.decode) {
-          img.decode()
-            .catch(() => {})
-            .finally(() => {
-              frames[i] = img;
-              if (i === currentFrameIndex || lastRenderedIndex === -1) {
-                render(true);
-              }
-              resolve(img);
-            });
+          img.decode().catch(() => {}).finally(() => resolve(img));
         } else {
-          frames[i] = img;
-          if (i === currentFrameIndex || lastRenderedIndex === -1) {
-            render(true);
-          }
           resolve(img);
         }
       };
@@ -53,14 +52,14 @@
   function preloadFrames() {
     loadFrame(0).then(() => render(true));
 
-    // Priority 1: First 24 frames (first second of motion)
-    for (let i = 1; i < Math.min(24, TOTAL_FRAMES); i++) {
+    // Priority 1: First 30 frames
+    for (let i = 1; i < Math.min(30, TOTAL_FRAMES); i++) {
       loadFrame(i);
     }
 
     // Priority 2: Stagger remaining frames in background idle batches
-    let nextIndex = 24;
-    const BATCH_SIZE = 8;
+    let nextIndex = 30;
+    const BATCH_SIZE = 12;
 
     function queueBatch() {
       if (nextIndex >= TOTAL_FRAMES) return;
@@ -71,17 +70,17 @@
       nextIndex = end;
       if (nextIndex < TOTAL_FRAMES) {
         if ('requestIdleCallback' in window) {
-          requestIdleCallback(queueBatch, { timeout: 120 });
+          requestIdleCallback(queueBatch, { timeout: 100 });
         } else {
-          setTimeout(queueBatch, 25);
+          setTimeout(queueBatch, 20);
         }
       }
     }
 
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(queueBatch, { timeout: 150 });
+      requestIdleCallback(queueBatch, { timeout: 120 });
     } else {
-      setTimeout(queueBatch, 40);
+      setTimeout(queueBatch, 30);
     }
   }
 
@@ -230,16 +229,12 @@
     render(true);
   });
 
-  // Initialize
+  // Initialize Canvas & Animation Loop
   resize();
   preloadFrames();
   requestAnimationFrame(loop);
 
   // Mobile 3-Dots Menu Toggle
-  const siteHeader = document.getElementById('siteHeader');
-  const navDotsBtn = document.getElementById('navDotsBtn');
-  const mobileNavMenu = document.getElementById('mobileNavMenu');
-
   if (navDotsBtn && siteHeader) {
     navDotsBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -275,10 +270,6 @@
   }
 
   // Floating Liquid Glass Contact Widget Toggle
-  const floatingWrapper = document.getElementById('floatingContactWrapper');
-  const floatingBtn = document.getElementById('floatingContactBtn');
-  const floatingMenu = document.getElementById('floatingContactMenu');
-
   if (floatingBtn && floatingWrapper) {
     floatingBtn.addEventListener('click', (e) => {
       e.stopPropagation();
