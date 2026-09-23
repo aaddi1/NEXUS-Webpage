@@ -1475,7 +1475,7 @@ h2 span,
 
 @media (max-width: 960px) {
   .shell {
-    width: min(100% - 40px, 920px);
+    width: min(100% - 48px, 920px);
   }
 
   .nav-links {
@@ -1489,39 +1489,47 @@ h2 span,
   .nav {
     min-height: 68px;
   }
+
+  .nav-cta {
+    display: none;
+  }
+
+  .section {
+    margin-top: 160px;
+  }
 }
 
 @media (max-width: 768px) {
   body::before {
     background:
-      linear-gradient(180deg, rgba(1, 8, 8, 0.28) 0%, rgba(1, 8, 8, 0.10) 40%, rgba(1, 8, 8, 0.50) 100%);
+      linear-gradient(180deg, rgba(1, 8, 8, 0.22) 0%, rgba(1, 8, 8, 0.05) 40%, rgba(1, 8, 8, 0.40) 100%);
   }
 
   .shell {
-    width: calc(100% - 32px);
+    width: calc(100% - 36px);
     margin-inline: auto;
   }
 
   .page-layer {
-    padding-top: 76px;
-    padding-bottom: 72px;
+    padding-top: 100px;
+    padding-bottom: 140px;
   }
 
   .site-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(0, 15, 15, 0.65);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(0, 15, 15, 0.55);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  .site-header.nav-scrolled {
+    background: rgba(0, 12, 14, 0.85);
   }
 
   .nav {
     min-height: 64px;
     padding: 10px 0;
     flex-wrap: nowrap;
-    gap: 12px;
+    gap: 14px;
   }
 
   .brand {
@@ -1536,33 +1544,35 @@ h2 span,
 
   .nav-actions {
     gap: 8px;
+    margin-left: auto;
   }
 
   .nav-cta {
-    min-height: 38px;
-    padding: 0 14px;
-    font-size: 12px;
+    display: none;
   }
 
   .nav-dots-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
   }
 
   .nav-links {
     display: none;
   }
 
+  /* Spacious Section Rhythm for Background Animation Visibility */
   .section {
-    margin-top: 84px;
+    margin-top: 180px;
+    margin-bottom: 40px;
   }
 
   .hero {
-    min-height: auto;
-    padding: 36px 0 44px;
+    min-height: calc(85vh - 80px);
+    padding: 50px 0 60px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 24px;
   }
 
@@ -1572,18 +1582,18 @@ h2 span,
   }
 
   .pill {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
     font-size: 11px;
-    padding: 6px 14px;
+    padding: 8px 16px;
     line-height: 1.4;
   }
 
   h1 {
     max-width: 100%;
-    font-size: clamp(28px, 7.5vw, 42px);
-    line-height: 1.12;
-    letter-spacing: -0.01em;
-    word-break: break-word;
+    font-size: clamp(30px, 8.5vw, 42px);
+    line-height: 1.16;
+    letter-spacing: -0.02em;
+    word-break: normal;
   }
 
   h1 span {
@@ -1592,26 +1602,31 @@ h2 span,
 
   .hero-text {
     font-size: 15px;
-    line-height: 1.55;
-    margin-top: 14px;
-    color: #cddedb;
+    line-height: 1.7;
+    margin-top: 20px;
+    color: #d6e8e5;
   }
 
   .hero-actions {
-    gap: 12px;
-    margin-top: 20px;
+    gap: 16px;
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
   }
 
   .hero-actions .button {
-    min-height: 48px;
-    padding: 0 22px;
-    font-size: 14px;
-    flex: 1 1 auto;
+    min-height: 52px;
+    padding: 0 24px;
+    font-size: 15px;
+    width: 100%;
+    border-radius: 999px;
   }
 
   .mini-quote {
-    margin-top: 16px;
-    font-size: 15px;
+    margin-top: 24px;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   .hand-note {
@@ -1619,43 +1634,28 @@ h2 span,
   }
 
   .speech-card {
-    position: static;
-    width: 100%;
-    max-width: 100%;
-    margin-top: 8px;
-    padding: 18px 20px;
-    border-radius: 16px;
-  }
-
-  .speech-card h2 {
-    font-size: 20px;
-    margin-bottom: 8px;
-  }
-
-  .speech-card strong {
-    font-size: 15px;
-    margin-bottom: 6px;
-  }
-
-  .speech-card p {
-    font-size: 14px;
+    display: none;
   }
 
   .benefit-strip {
     grid-template-columns: 1fr;
-    gap: 14px;
-    padding: 18px 20px;
-    margin-top: 28px;
-    margin-bottom: 28px;
+    gap: 22px;
+    padding: 30px 24px;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    border-radius: 24px;
+    background:
+      linear-gradient(135deg, rgba(4, 32, 30, 0.14), rgba(1, 16, 17, 0.05)),
+      rgba(1, 20, 19, 0.08);
   }
 
   .section-head {
-    margin-bottom: 24px;
+    margin-bottom: 32px;
   }
 
   .section-head.split {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 16px;
   }
 
   .section-head h2,
@@ -1663,11 +1663,11 @@ h2 span,
   .reviews h2,
   .author h2,
   .cta h2 {
-    font-size: clamp(24px, 6vw, 32px);
-    line-height: 1.18;
+    font-size: clamp(24px, 6.5vw, 32px);
+    line-height: 1.22;
     letter-spacing: -0.01em;
-    word-break: break-word;
-    margin-bottom: 10px;
+    word-break: normal;
+    margin-bottom: 12px;
   }
 
   .section-head > p,
@@ -1677,53 +1677,67 @@ h2 span,
   .author blockquote,
   .cta p {
     font-size: 15px;
-    line-height: 1.55;
+    line-height: 1.7;
+    color: #c4d8d5;
   }
 
   .glass-panel,
   .compact-panel,
   .author,
   .cta {
-    padding: 24px 18px;
-    border-radius: 18px;
+    padding: 32px 24px;
+    border-radius: 24px;
+    background:
+      linear-gradient(135deg, rgba(7, 46, 43, 0.12), rgba(2, 19, 19, 0.04)),
+      rgba(2, 22, 21, 0.08);
   }
 
   .feature-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 20px;
   }
 
   .feature-card {
     min-height: auto;
-    padding: 20px 18px;
+    padding: 24px 20px;
+    border-radius: 20px;
+    background:
+      linear-gradient(135deg, rgba(12, 74, 69, 0.14), rgba(6, 42, 40, 0.04)),
+      rgba(3, 24, 25, 0.08);
   }
 
   .feature-card h3 {
-    font-size: 16px;
-    margin: 10px 0 6px;
+    font-size: 17px;
+    margin: 12px 0 6px;
   }
 
   .feature-card p {
     font-size: 14px;
+    line-height: 1.6;
   }
 
   .platform {
-    gap: 32px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    gap: 40px;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 
   .help-row {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 20px;
   }
 
   .help-row article {
-    gap: 14px;
+    gap: 16px;
   }
 
   .help-row h3 {
-    font-size: 15px;
+    font-size: 16px;
+  }
+
+  .help-row p {
+    font-size: 14px;
+    line-height: 1.6;
   }
 
   .macbook-lid {
@@ -1741,12 +1755,29 @@ h2 span,
 
   .testimonial-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 20px;
   }
 
   .testimonial {
     min-height: auto;
-    padding: 20px 18px;
+    padding: 24px 20px;
+    border-radius: 20px;
+    background:
+      linear-gradient(135deg, rgba(12, 74, 69, 0.14), rgba(6, 42, 40, 0.04)),
+      rgba(3, 24, 25, 0.08);
+  }
+
+  .testimonial p {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .testimonial b {
+    font-size: 14px;
+  }
+
+  .testimonial small {
+    font-size: 12px;
   }
 
   .arrows {
@@ -1755,76 +1786,79 @@ h2 span,
 
   .author {
     grid-template-columns: 1fr;
-    gap: 18px;
+    gap: 22px;
     text-align: center;
-    padding: 24px 18px;
+    padding: 36px 24px;
+    margin-top: 180px;
   }
 
   .author-photo {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
     margin: 0 auto;
   }
 
   .author-copy h2 {
-    font-size: 22px;
-    margin-bottom: 8px;
+    font-size: 24px;
+    margin-bottom: 10px;
   }
 
   .author-copy h3 {
-    font-size: 16px;
-    margin-bottom: 6px;
+    font-size: 17px;
+    margin-bottom: 8px;
   }
 
   .author-contacts {
-    gap: 8px;
-    margin-top: 14px;
+    gap: 10px;
+    margin-top: 18px;
     justify-content: center;
   }
 
   .contact-pill {
-    font-size: 12px;
-    padding: 6px 12px;
+    font-size: 13px;
+    padding: 8px 16px;
   }
 
   .signature {
     justify-self: center;
-    font-size: 22px;
-    margin-top: 6px;
+    font-size: 24px;
+    margin-top: 8px;
   }
 
   .cta {
-    margin-top: 80px;
-    padding: 24px 18px;
+    margin-top: 180px;
+    padding: 36px 24px;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 18px;
+    gap: 22px;
   }
 
   .cta .button {
     width: 100%;
+    min-height: 52px;
   }
 
   .site-footer {
     grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 28px 0 20px;
+    gap: 36px;
+    margin-top: 140px;
+    padding: 40px 0 30px;
   }
 
   .floating-contact-wrapper {
-    bottom: 20px;
+    bottom: 24px;
     right: 20px;
   }
 
   .liquid-glass-btn {
-    width: 50px;
-    height: 50px;
+    width: 52px;
+    height: 52px;
   }
 
   .glass-icon-btn {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
   }
 
   .glass-tooltip {
@@ -1834,15 +1868,11 @@ h2 span,
 }
 
 @media (max-width: 480px) {
-  .hero-actions {
-    flex-direction: column;
+  .brand span {
+    font-size: 18px;
   }
 
   .hero-actions .button {
     width: 100%;
-  }
-
-  .brand span {
-    font-size: 18px;
   }
 }
