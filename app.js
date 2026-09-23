@@ -169,6 +169,45 @@
   preloadFrames();
   requestAnimationFrame(loop);
 
+  // Mobile 3-Dots Menu Toggle
+  const siteHeader = document.getElementById('siteHeader');
+  const navDotsBtn = document.getElementById('navDotsBtn');
+  const mobileNavMenu = document.getElementById('mobileNavMenu');
+
+  if (navDotsBtn && siteHeader) {
+    navDotsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = siteHeader.classList.toggle('mobile-open');
+      navDotsBtn.setAttribute('aria-expanded', String(isOpen));
+      if (mobileNavMenu) {
+        mobileNavMenu.setAttribute('aria-hidden', String(!isOpen));
+      }
+    });
+
+    // Close mobile nav when clicking any link
+    const mobileLinks = document.querySelectorAll('.mobile-nav-link, .mobile-nav-cta');
+    mobileLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        siteHeader.classList.remove('mobile-open');
+        navDotsBtn.setAttribute('aria-expanded', 'false');
+        if (mobileNavMenu) {
+          mobileNavMenu.setAttribute('aria-hidden', 'true');
+        }
+      });
+    });
+
+    // Close mobile nav when clicking outside
+    document.addEventListener('click', (e) => {
+      if (siteHeader.classList.contains('mobile-open') && !siteHeader.contains(e.target)) {
+        siteHeader.classList.remove('mobile-open');
+        navDotsBtn.setAttribute('aria-expanded', 'false');
+        if (mobileNavMenu) {
+          mobileNavMenu.setAttribute('aria-hidden', 'true');
+        }
+      }
+    });
+  }
+
   // Floating Liquid Glass Contact Widget Toggle
   const floatingWrapper = document.getElementById('floatingContactWrapper');
   const floatingBtn = document.getElementById('floatingContactBtn');

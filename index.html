@@ -14,13 +14,13 @@
   <canvas id="canvas" aria-hidden="true"></canvas>
   <div class="background-grade" aria-hidden="true"></div>
 
-  <header class="site-header">
+  <header class="site-header" id="siteHeader">
     <nav class="nav shell" aria-label="Main navigation">
       <a class="brand" href="#home" aria-label="NEXUS home">
         <img class="brand-icon" src="assets/toad-seal.svg" alt="NEXUS Official Toad Seal" />
         <span>NEXUS</span>
       </a>
-      <div class="nav-links">
+      <div class="nav-links" id="navLinks">
         <a class="active" href="#home">Home</a>
         <a href="#features">Features</a>
         <a href="#platform">Platform</a>
@@ -28,8 +28,27 @@
         <a href="#reviews">Reviews</a>
         <a href="#about">About</a>
       </div>
-      <a class="nav-cta" href="https://github.com/aaddi1/NEXUS" target="_blank" rel="noopener noreferrer">Get Started <span>→</span></a>
+      <div class="nav-actions">
+        <a class="nav-cta" href="https://github.com/aaddi1/NEXUS" target="_blank" rel="noopener noreferrer">Get Started <span>→</span></a>
+        <button class="nav-dots-btn" id="navDotsBtn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </button>
+      </div>
     </nav>
+    <div class="mobile-nav-menu" id="mobileNavMenu" aria-hidden="true">
+      <div class="mobile-nav-inner shell">
+        <a class="mobile-nav-link active" href="#home"><span>✦</span> Home</a>
+        <a class="mobile-nav-link" href="#features"><span>✦</span> Features</a>
+        <a class="mobile-nav-link" href="#platform"><span>✦</span> Platform</a>
+        <a class="mobile-nav-link" href="#benefits"><span>✦</span> Benefits</a>
+        <a class="mobile-nav-link" href="#reviews"><span>✦</span> Reviews</a>
+        <a class="mobile-nav-link" href="#about"><span>✦</span> About Author</a>
+        <div class="mobile-nav-divider"></div>
+        <a class="mobile-nav-cta" href="https://github.com/aaddi1/NEXUS" target="_blank" rel="noopener noreferrer">Open Repository <span>→</span></a>
+      </div>
+    </div>
   </header>
 
   <main class="page-layer" id="home">
