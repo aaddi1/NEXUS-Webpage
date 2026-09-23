@@ -151,7 +151,12 @@
 
   // Event listeners
   window.addEventListener('scroll', updateScroll, { passive: true });
+  window.addEventListener('touchmove', updateScroll, { passive: true });
   window.addEventListener('resize', resize);
+  window.addEventListener('orientationchange', () => {
+    setTimeout(resize, 120);
+    setTimeout(updateScroll, 150);
+  });
   window.addEventListener('load', () => {
     resize();
     updateScroll();
