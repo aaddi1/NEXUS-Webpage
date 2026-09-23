@@ -6,6 +6,7 @@
 
 **Ultra-Smooth 24fps 1080p Scroll-Driven Frame Animation & Liquid Glassmorphism Showcase**
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-aaddi1.github.io%2FNEXUS--Webpage-00F5E4?style=for-the-badge&logo=googlechrome&logoColor=05120f)](https://aaddi1.github.io/NEXUS-Webpage/)
 [![GitHub](https://img.shields.io/badge/GitHub-aaddi1-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/aaddi1)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Aryan--Sharma-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/aryan-sharma11/)
 [![X / Twitter](https://img.shields.io/badge/X-@aaddi1-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/aaddi1)
@@ -16,7 +17,9 @@
 <br/>
 
 <p align="center">
-  <img src="assets/thumbnail.png" alt="NEXUS Webpage Showcase Preview" width="90%" style="border-radius: 16px; border: 1px solid rgba(0, 245, 228, 0.4); box-shadow: 0 24px 80px rgba(0, 245, 228, 0.25);" />
+  <a href="https://aaddi1.github.io/NEXUS-Webpage/" target="_blank">
+    <img src="assets/thumbnail.png" alt="NEXUS Webpage Showcase Preview" width="90%" style="border-radius: 16px; border: 1px solid rgba(0, 245, 228, 0.4); box-shadow: 0 24px 80px rgba(0, 245, 228, 0.25);" />
+  </a>
 </p>
 
 </div>
@@ -26,6 +29,10 @@
 ## ⚡ Overview
 
 The **NEXUS Webpage** is a high-performance, cinematic web interface engineered to showcase the [NEXUS Enterprise Operations Platform](https://github.com/aaddi1/NEXUS). Built from the ground up with pure Vanilla JavaScript, hardware-accelerated HTML5 Canvas, and advanced CSS Grid/Flexbox glassmorphism, it delivers a zero-latency, tactile interactive presentation.
+
+🔗 **Live Deployment**: [https://aaddi1.github.io/NEXUS-Webpage/](https://aaddi1.github.io/NEXUS-Webpage/)  
+📦 **Webpage Source**: [https://github.com/aaddi1/NEXUS-Webpage](https://github.com/aaddi1/NEXUS-Webpage)  
+🚀 **NEXUS Platform Core**: [https://github.com/aaddi1/NEXUS](https://github.com/aaddi1/NEXUS)
 
 ---
 
@@ -78,25 +85,33 @@ NEXUS-Webpage/
 
 ---
 
-## 🛠️ Quickstart & Local Execution
+## 🛠️ Quickstart & Execution
 
-### Prerequisites
+### 🌐 Instant Live Access (No Installation Required)
+Experience the full cinematic interactive application instantly in your browser:
+👉 **[https://aaddi1.github.io/NEXUS-Webpage/](https://aaddi1.github.io/NEXUS-Webpage/)**
+
+---
+
+### 💻 Local Development Setup
+
+#### Prerequisites
 - Node.js `v18.0.0+` (or any modern web server / Python HTTP server)
 
-### 1. Clone the Repository
+#### 1. Clone the Repository
 ```bash
 git clone https://github.com/aaddi1/NEXUS-Webpage.git
 cd NEXUS-Webpage
 ```
 
-### 2. Launch Local Server
+#### 2. Launch Local Server
 ```bash
 npm start
 # or
 node server.js
 ```
 
-### 3. Open in Browser
+#### 3. Open in Browser
 Navigate to **`http://localhost:3000`**
 
 ---
