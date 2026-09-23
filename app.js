@@ -3,7 +3,7 @@
 
   const TOTAL_FRAMES = 239;
   const FRAME_PATH = (i) => `frames/frame_${String(i).padStart(6, '0')}.webp`;
-  const LERP = 0.10;
+  const LERP = 0.12;
 
   const canvas = document.getElementById('canvas');
   if (!canvas) return;
@@ -14,38 +14,74 @@
   let currentProgress = 0;
   let currentFrameIndex = 0;
   let lastRenderedIndex = -1;
+  let cachedMaxScroll = 1;
+  let isTicking = false;
 
-  // Universally compatible image loader
+  // Universally compatible image loader with background decoding
   function loadFrame(i) {
     if (frames[i]) return Promise.resolve(frames[i]);
 
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
-        frames[i] = img;
-        if (i === currentFrameIndex || lastRenderedIndex === -1) {
-          render(true);
+        if (img.decode) {
+          img.decode()
+            .catch(() => {})
+            .finally(() => {
+              frames[i] = img;
+              if (i === currentFrameIndex || lastRenderedIndex === -1) {
+                render(true);
+              }
+              resolve(img);
+            });
+        } else {
+          frames[i] = img;
+          if (i === currentFrameIndex || lastRenderedIndex === -1) {
+            render(true);
+          }
+          resolve(img);
         }
-        resolve(img);
       };
       img.onerror = () => {
         resolve(null);
       };
       img.src = FRAME_PATH(i);
-      if (img.decode) {
-        img.decode().catch(() => {});
-      }
     });
   }
 
-  // Preload all frames progressively
+  // Smooth progressive preloading in idle chunks
   function preloadFrames() {
-    loadFrame(0).then(() => {
-      render(true);
-    });
+    loadFrame(0).then(() => render(true));
 
-    for (let i = 1; i < TOTAL_FRAMES; i++) {
+    // Priority 1: First 24 frames (first second of motion)
+    for (let i = 1; i < Math.min(24, TOTAL_FRAMES); i++) {
       loadFrame(i);
+    }
+
+    // Priority 2: Stagger remaining frames in background idle batches
+    let nextIndex = 24;
+    const BATCH_SIZE = 8;
+
+    function queueBatch() {
+      if (nextIndex >= TOTAL_FRAMES) return;
+      const end = Math.min(TOTAL_FRAMES, nextIndex + BATCH_SIZE);
+      for (let i = nextIndex; i < end; i++) {
+        loadFrame(i);
+      }
+      nextIndex = end;
+      if (nextIndex < TOTAL_FRAMES) {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(queueBatch, { timeout: 120 });
+        } else {
+          setTimeout(queueBatch, 25);
+        }
+      }
+    }
+
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(queueBatch, { timeout: 150 });
+    } else {
+      setTimeout(queueBatch, 40);
     }
   }
 
@@ -69,7 +105,7 @@
     return null;
   }
 
-  // Draw frame to cover canvas viewport
+  // Draw frame to cover canvas viewport with GPU acceleration
   function render(force = false) {
     if (!ctx) return;
     const frameIdx = Math.max(0, Math.min(TOTAL_FRAMES - 1, currentFrameIndex));
@@ -88,8 +124,8 @@
     const scale = Math.max(cw / iw, ch / ih);
     const rw = iw * scale;
     const rh = ih * scale;
-    const ox = (cw - rw) / 2;
-    const oy = (ch - rh) / 2;
+    const ox = (cw - rw) * 0.5;
+    const oy = (ch - rh) * 0.5;
 
     ctx.clearRect(0, 0, cw, ch);
     ctx.drawImage(img, 0, 0, iw, ih, ox, oy, rw, rh);
@@ -107,65 +143,61 @@
     canvas.style.width = `${w}px`;
     canvas.style.height = `${h}px`;
 
+    recalculateScrollMetrics();
+    onScroll();
     render(true);
   }
 
-  // Calculate current scroll progress (0.0 to 1.0)
-  function updateScroll() {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || window.scrollY || document.body.scrollTop || 0;
-    const maxScroll = Math.max(
+  // Cache document scroll bounds without layout thrashing
+  function recalculateScrollMetrics() {
+    const docH = Math.max(
       document.body.scrollHeight,
       document.documentElement.scrollHeight,
       document.body.offsetHeight,
       document.documentElement.offsetHeight
-    ) - window.innerHeight;
+    );
+    cachedMaxScroll = Math.max(1, docH - window.innerHeight);
+  }
 
-    if (maxScroll > 0) {
-      targetProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
-    } else {
-      targetProgress = 0;
-    }
+  // High-performance scroll tracker
+  function onScroll() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || window.scrollY || 0;
+    targetProgress = Math.max(0, Math.min(1, scrollTop / cachedMaxScroll));
   }
 
   // Smooth lerping animation loop
   function loop() {
-    updateScroll();
-
     const diff = targetProgress - currentProgress;
     if (Math.abs(diff) > 0.0001) {
       currentProgress += diff * LERP;
-    } else {
+      const nextIndex = Math.round(currentProgress * (TOTAL_FRAMES - 1));
+      if (nextIndex !== currentFrameIndex || lastRenderedIndex === -1) {
+        currentFrameIndex = nextIndex;
+        render();
+      }
+    } else if (currentProgress !== targetProgress) {
       currentProgress = targetProgress;
-    }
-
-    currentProgress = Math.max(0, Math.min(1, currentProgress));
-    const nextIndex = Math.round(currentProgress * (TOTAL_FRAMES - 1));
-
-    if (nextIndex !== currentFrameIndex || lastRenderedIndex === -1) {
-      currentFrameIndex = nextIndex;
+      currentFrameIndex = Math.round(currentProgress * (TOTAL_FRAMES - 1));
       render();
     }
 
     requestAnimationFrame(loop);
   }
 
-  // Event listeners
-  window.addEventListener('scroll', updateScroll, { passive: true });
-  window.addEventListener('touchmove', updateScroll, { passive: true });
-  window.addEventListener('resize', resize);
+  // Event listeners with passive options for maximum scroll FPS
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('touchmove', onScroll, { passive: true });
+  window.addEventListener('resize', resize, { passive: true });
   window.addEventListener('orientationchange', () => {
-    setTimeout(resize, 120);
-    setTimeout(updateScroll, 150);
+    setTimeout(resize, 100);
   });
   window.addEventListener('load', () => {
     resize();
-    updateScroll();
     render(true);
   });
 
   // Initialize
   resize();
-  updateScroll();
   preloadFrames();
   requestAnimationFrame(loop);
 
