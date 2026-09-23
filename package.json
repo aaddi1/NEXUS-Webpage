@@ -1,0 +1,19 @@
+{
+  "name": "nexus-scroll-animation",
+  "version": "1.0.0",
+  "description": "Ultra-smooth scroll-driven 24fps 1080p frame animation web application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "canvas",
+    "scroll-animation",
+    "webp",
+    "requestanimationframe",
+    "smooth-scroll"
+  ],
+  "author": "",
+  "license": "MIT"
+}
